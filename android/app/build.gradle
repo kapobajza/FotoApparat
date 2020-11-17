@@ -207,6 +207,11 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:1.+'
+    // Adding support for multidex apps
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 // Run this once to be able to run the application with BUCK

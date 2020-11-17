@@ -1,12 +1,12 @@
 import { StyleSheet, ViewStyle } from 'react-native';
 
-export interface ContainerStyleType {
+export interface ContainerStylesType {
   fill: ViewStyle;
   fillAndCenter: ViewStyle;
   absoluteFillAndCenter: ViewStyle;
 }
 
-export default StyleSheet.create<ContainerStyleType>({
+export default StyleSheet.create<ContainerStylesType>({
   fill: {
     flex: 1,
   },
