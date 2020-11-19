@@ -1,21 +1,3 @@
-export interface ColorType {
-  transparent: string;
-  white: string;
-  black: string;
-  gray100: string;
-  gray200: string;
-  gray300: string;
-  gray400: string;
-  gray500: string;
-  gray600: string;
-  gray700: string;
-  gray800: string;
-  gray900: string;
-  gold: string;
-  disabledGray: string;
-  blackWithTransparency: Function;
-}
-
 const colors = {
   transparent: 'rgba(0,0,0,0)',
   white: '#fff',
@@ -33,6 +15,9 @@ const colors = {
   disabledGray: '#D3D3D3',
   blackWithTransparency: (transparency = 0.5) =>
     `rgba(0, 0, 0, ${transparency})`,
+  error: '#d9534f',
+  info: '#5bc0de',
+  success: '#5cb85c',
 };
 
 export default colors;

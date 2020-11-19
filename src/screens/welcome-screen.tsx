@@ -7,12 +7,30 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-community/google-signin';
 
 import containerStyles from '../styles/containers';
 import colors from '../styles/colors';
 import Text from '../components/text';
+import { useFlashMessage } from '../custom-lib/flash-message';
 
 export default function WelcomeScreen() {
+  const { showError } = useFlashMessage();
+
+  const onGSignInPress = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signIn();
+    } catch (err) {
+      if (err?.code !== statusCodes.SIGN_IN_CANCELLED) {
+        showError(err);
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={containerStyles.fill}>
       <ImageBackground
@@ -27,7 +45,10 @@ export default function WelcomeScreen() {
               saved to your Google Drive account and ordered accordingly!
             </Text>
           </View>
-          <TouchableOpacity style={styles.gSignInContainer} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.gSignInContainer}
+            activeOpacity={0.7}
+            onPress={onGSignInPress}>
             <Image
               source={require('../../assets/images/google-logo.png')}
               style={styles.googleLogo}
