@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import FlashMessageContext from './context';
-import { FlashMessageContextType, MessageType } from './types';
-import Text from '../../components/text';
+import { FlashMessageContextType } from './types';
+import FlashMessage from './flash-message';
 import colors from '../../styles/colors';
 
 interface Props {
@@ -12,60 +12,19 @@ interface Props {
   timeout?: number;
 }
 
-let timeoutId: any = null;
-
-const FlashMessageProvider: React.FC<Props> = ({ children, timeout }) => {
-  const [message, setMessage] = useState<string | null>(null);
-  const [type, setType] = useState<MessageType>(null);
+const FlashMessageProvider: React.FC<Props> = ({ children }) => {
   const insets = useSafeAreaInsets();
-
-  const removeMessageAfterTimeout = () => {
-    timeoutId = setTimeout(() => {
-      setMessage(null);
-      setType(null);
-    }, timeout);
-  };
-
-  const contextValue: FlashMessageContextType = {
-    showError: (error) => {
-      clearTimeout(timeoutId);
-      setMessage(error?.message || 'An error occurred');
-      setType('error');
-      removeMessageAfterTimeout();
-    },
-    showSuccess: (msg) => {
-      clearTimeout(timeoutId);
-      setMessage(msg);
-      setType('success');
-      removeMessageAfterTimeout();
-    },
-    showInfo: (msg) => {
-      clearTimeout(timeoutId);
-      setMessage(msg);
-      setType('info');
-      removeMessageAfterTimeout();
-    },
-  };
-
-  let backgroundColor = '';
-
-  if (type === 'error') {
-    backgroundColor = colors.error;
-  } else if (type === 'info') {
-    backgroundColor = colors.info;
-  } else if (type === 'success') {
-    backgroundColor = colors.success;
-  }
+  const [contextValue, setContextValue] = useState<FlashMessageContextType>({
+    showError: () => {},
+    showSuccess: () => {},
+    showInfo: () => {},
+  });
 
   return (
     <FlashMessageContext.Provider value={contextValue}>
       {children}
       <View style={[styles.outerContainer, { bottom: insets.bottom + 30 }]}>
-        {message ? (
-          <View style={[styles.container, { backgroundColor }]}>
-            <Text style={styles.message}>{message}</Text>
-          </View>
-        ) : null}
+        <FlashMessage setContextValue={setContextValue} />
       </View>
     </FlashMessageContext.Provider>
   );

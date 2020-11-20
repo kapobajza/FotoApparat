@@ -1,6 +1,6 @@
 export type MessageType = 'error' | 'success' | 'info' | null;
 
-interface MessageError {
+export interface MessageError {
   message: string | null | undefined;
 }
 
