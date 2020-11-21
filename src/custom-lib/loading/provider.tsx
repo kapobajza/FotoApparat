@@ -12,6 +12,7 @@ const LoadingProvider: React.FC<Props> = ({ children }) => {
   const [contextValue, setContextValue] = useState<LoadingContextType>({
     startLoading: () => {},
     stopLoading: () => {},
+    isLoading: false,
   });
 
   return (

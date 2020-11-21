@@ -10,4 +10,13 @@ export default class GoogleService {
     const { accessToken } = await GoogleSignin.getTokens();
     await StorageService.setGoogleAccessToken(accessToken);
   };
+
+  static signInSilently = async (): Promise<void> => {
+    await GoogleSignin.hasPlayServices();
+    await GoogleSignin.signInSilently();
+  };
+
+  static signOut = async (): Promise<void> => {
+    await GoogleSignin.signOut();
+  };
 }

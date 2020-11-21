@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 export interface AuthContextType {
   isSignedIn: boolean;
-  setIsSignedIn: (isSignedInd: boolean) => void;
+  setIsSignedIn: (isSignedIn: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({

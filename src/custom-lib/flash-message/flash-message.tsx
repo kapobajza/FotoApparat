@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MessageType, FlashMessageContextType } from './types';
-import { colors } from '../../styles';
+import { colors, sizes } from '../../styles';
 import { Text } from '../../components/text';
 import FlashMessageState from './state';
 
@@ -22,16 +22,16 @@ const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
   const [type, setType] = useState<MessageType>(null);
   const insets = useSafeAreaInsets();
 
-  const { translateY, slideInAnim, slideOutAnim } = useMemo(() => {
-    const initalValue = insets.bottom + 100;
-    const transY = new Value(initalValue);
+  const { translateX, slideInAnim, slideOutAnim } = useMemo(() => {
+    const initalValue = -sizes.screenSize.width;
+    const transX = new Value(initalValue);
     const useNativeDriver = true;
     const duration = 400;
 
     return {
-      translateY: transY,
-      slideInAnim: timing(transY, { toValue: 0, useNativeDriver, duration }),
-      slideOutAnim: timing(transY, {
+      translateX: transX,
+      slideInAnim: timing(transX, { toValue: 0, useNativeDriver, duration }),
+      slideOutAnim: timing(transX, {
         toValue: initalValue,
         useNativeDriver,
         duration,
@@ -119,7 +119,7 @@ const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
     <Animated.View
       style={[
         styles.outerContainer,
-        { bottom: insets.bottom + 30, transform: [{ translateY }] },
+        { bottom: insets.bottom + 30, transform: [{ translateX }] },
       ]}>
       <View
         style={[styles.container, styles.horizontalRow, { backgroundColor }]}>

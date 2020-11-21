@@ -4,6 +4,7 @@ export default class LoadingState {
   static state: LoadingContextType = {
     startLoading: () => {},
     stopLoading: () => {},
+    isLoading: false,
   };
 
   static init(state: LoadingContextType) {
@@ -16,5 +17,9 @@ export default class LoadingState {
 
   static stopLoading() {
     this.state.stopLoading();
+  }
+
+  static getIsLoading() {
+    return this.state.isLoading;
   }
 }

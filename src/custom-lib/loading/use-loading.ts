@@ -8,6 +8,7 @@ export default function () {
   const contextValue: LoadingContextType = {
     startLoading: context.startLoading,
     stopLoading: context.stopLoading,
+    isLoading: context.isLoading,
   };
 
   return contextValue;

@@ -15,6 +15,7 @@ const Loading: React.FC<Props> = ({ setContextValue }) => {
   const contextValue: LoadingContextType = {
     startLoading: () => setLoading(true),
     stopLoading: () => setLoading(false),
+    isLoading: loading,
   };
 
   useEffect(() => {
