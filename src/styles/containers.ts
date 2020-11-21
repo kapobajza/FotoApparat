@@ -1,10 +1,6 @@
-import { StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-export interface ContainerStylesType {
-  fill: ViewStyle;
-  fillAndCenter: ViewStyle;
-  absoluteFillAndCenter: ViewStyle;
-}
+import { ContainerStylesType } from './types';
 
 export default StyleSheet.create<ContainerStylesType>({
   fill: {

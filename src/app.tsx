@@ -7,9 +7,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GoogleSignin } from '@react-native-community/google-signin';
 
 import Router from './router/main-router';
-import colors from './styles/colors';
+import { colors } from './styles';
 import AppConfig from './config';
 import { FlashMessageProvider } from './custom-lib/flash-message';
+import { LoadingProvider } from './custom-lib/loading';
 
 // Set the background color of all components to be white by default
 const CustomTheme = {
@@ -32,8 +33,10 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer theme={CustomTheme}>
         <FlashMessageProvider>
-          <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
-          <Router />
+          <LoadingProvider>
+            <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
+            <Router />
+          </LoadingProvider>
         </FlashMessageProvider>
       </NavigationContainer>
     </SafeAreaProvider>

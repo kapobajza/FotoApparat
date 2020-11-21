@@ -12,22 +12,26 @@ import {
   statusCodes,
 } from '@react-native-community/google-signin';
 
-import containerStyles from '../styles/containers';
-import colors from '../styles/colors';
+import { colors, containerStyles } from '../styles';
 import Text from '../components/text';
 import { useFlashMessage } from '../custom-lib/flash-message';
+import { useLoading } from '../custom-lib/loading';
 
 export default function WelcomeScreen() {
   const { showError } = useFlashMessage();
+  const { startLoading, stopLoading } = useLoading();
 
   const onGSignInPress = async () => {
     try {
+      startLoading();
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
     } catch (err) {
       if (err?.code !== statusCodes.SIGN_IN_CANCELLED) {
         showError(err);
       }
+    } finally {
+      stopLoading();
     }
   };
 
