@@ -2,14 +2,14 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import StackNavWithoutHeader from './stack-nav-no-header';
-import { WelcomeScreen } from '../screens';
+import { HomeScreen } from '../screens';
 
 const Stack = createStackNavigator();
 
-export default function AuthRouter() {
+export default function AppRouter() {
   return (
     <StackNavWithoutHeader>
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
     </StackNavWithoutHeader>
   );
 }

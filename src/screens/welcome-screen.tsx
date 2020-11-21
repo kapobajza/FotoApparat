@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,25 +7,26 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-community/google-signin';
+import { statusCodes } from '@react-native-community/google-signin';
+
+import { GoogleService } from '../services';
 
 import { colors, containerStyles } from '../styles';
-import Text from '../components/text';
-import { useFlashMessage } from '../custom-lib/flash-message';
+import { Text } from '../components/text';
 import { useLoading } from '../custom-lib/loading';
+import { useFlashMessage } from '../custom-lib/flash-message';
+import AuthContext, { AuthContextType } from '../contexts/auth-context';
 
 export default function WelcomeScreen() {
-  const { showError } = useFlashMessage();
   const { startLoading, stopLoading } = useLoading();
+  const { showError } = useFlashMessage();
+  const authContext = useContext<AuthContextType>(AuthContext);
 
   const onGSignInPress = async () => {
     try {
       startLoading();
-      await GoogleSignin.hasPlayServices();
-      await GoogleSignin.signIn();
+      await GoogleService.signIn();
+      authContext.setIsSignedIn(true);
     } catch (err) {
       if (err?.code !== statusCodes.SIGN_IN_CANCELLED) {
         showError(err);
@@ -43,7 +44,11 @@ export default function WelcomeScreen() {
         resizeMode="cover">
         <View style={styles.container}>
           <View>
-            <Text style={[styles.header, styles.shadow]}>FotoApparat</Text>
+            <Image
+              source={require('../../assets/images/icon_transparent.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
             <Text style={[styles.subtitle, styles.shadow]}>
               Shoot fascinating photos, rate them and they will be automatically
               saved to your Google Drive account and ordered accordingly!
@@ -71,11 +76,6 @@ const styles = StyleSheet.create({
     marginVertical: 60,
     flex: 1,
     justifyContent: 'space-between',
-  },
-  header: {
-    textAlign: 'center',
-    color: colors.white,
-    fontSize: 35,
   },
   googleLogo: {
     width: 30,
@@ -113,5 +113,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     lineHeight: 22,
     marginHorizontal: 20,
+  },
+  logo: {
+    height: 80,
+    alignSelf: 'center',
   },
 });

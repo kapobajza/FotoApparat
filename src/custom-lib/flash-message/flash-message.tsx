@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MessageType, FlashMessageContextType } from './types';
 import { colors } from '../../styles';
-import Text from '../../components/text';
+import { Text } from '../../components/text';
+import FlashMessageState from './state';
 
 let timeoutId: any = null;
 
@@ -14,16 +15,38 @@ interface Props {
   timeout: number;
 }
 
+const { Value, timing } = Animated;
+
 const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
   const [message, setMessage] = useState<string | null>(null);
   const [type, setType] = useState<MessageType>(null);
-
   const insets = useSafeAreaInsets();
+
+  const { translateY, slideInAnim, slideOutAnim } = useMemo(() => {
+    const initalValue = insets.bottom + 100;
+    const transY = new Value(initalValue);
+    const useNativeDriver = true;
+    const duration = 400;
+
+    return {
+      translateY: transY,
+      slideInAnim: timing(transY, { toValue: 0, useNativeDriver, duration }),
+      slideOutAnim: timing(transY, {
+        toValue: initalValue,
+        useNativeDriver,
+        duration,
+      }),
+    };
+  }, []);
 
   const removeMessageAfterTimeout = () => {
     timeoutId = setTimeout(() => {
-      setMessage(null);
-      setType(null);
+      slideOutAnim.start(({ finished }) => {
+        if (finished) {
+          setMessage(null);
+          setType(null);
+        }
+      });
     }, timeout);
   };
 
@@ -49,12 +72,20 @@ const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
   };
 
   useEffect(() => {
+    // Initialize the centralized state
+    FlashMessageState.init(contextValue);
     setContextValue(contextValue);
 
     return () => {
       clearTimeout(timeoutId);
     };
   }, []);
+
+  useEffect(() => {
+    if (message) {
+      slideInAnim.start();
+    }
+  }, [message]);
 
   let backgroundColor = '';
   let iconName = '';
@@ -76,23 +107,33 @@ const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
 
   const onClosePress = () => {
     clearTimeout(timeoutId);
-    setMessage(null);
-    setType(null);
+    slideOutAnim.start(({ finished }) => {
+      if (finished) {
+        setMessage(null);
+        setType(null);
+      }
+    });
   };
 
   return (
-    <View style={[styles.outerContainer, { bottom: insets.bottom + 30 }]}>
+    <Animated.View
+      style={[
+        styles.outerContainer,
+        { bottom: insets.bottom + 30, transform: [{ translateY }] },
+      ]}>
       <View
         style={[styles.container, styles.horizontalRow, { backgroundColor }]}>
         <View style={[styles.horizontalRow, styles.innerContainer]}>
-          <Icon name={iconName} size={25} color={colors.white} />
+          {iconName ? (
+            <Icon name={iconName} size={25} color={colors.white} />
+          ) : null}
           <Text style={styles.message}>{message}</Text>
         </View>
         <TouchableOpacity onPress={onClosePress} activeOpacity={0.7}>
           <Icon name="times-circle" size={35} color={colors.white} />
         </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

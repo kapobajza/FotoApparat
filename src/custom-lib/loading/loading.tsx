@@ -3,6 +3,7 @@ import { SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 
 import { containerStyles, colors } from '../../styles';
 import { LoadingContextType } from './types';
+import LoadingState from './state';
 
 interface Props {
   setContextValue: (val: LoadingContextType) => void;
@@ -17,6 +18,7 @@ const Loading: React.FC<Props> = ({ setContextValue }) => {
   };
 
   useEffect(() => {
+    LoadingState.init(contextValue);
     setContextValue(contextValue);
   }, []);
 
