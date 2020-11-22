@@ -4,4 +4,5 @@ export interface ContainerStylesType {
   fill: ViewStyle;
   fillAndCenter: ViewStyle;
   absoluteFillAndCenter: ViewStyle;
+  absoluteFill: ViewStyle;
 }

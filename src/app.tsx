@@ -8,9 +8,12 @@ import { GoogleSignin } from '@react-native-community/google-signin';
 
 import Router from './router/main-router';
 import { colors } from './styles';
-import AppConfig from './config';
+import { AppConfig } from './config';
 import { FlashMessageProvider } from './custom-lib/flash-message';
 import { LoadingProvider } from './custom-lib/loading';
+import { ModalProvider } from './custom-lib/modal';
+import { StackType } from './custom-lib/modal/types';
+import { TestModal } from './components/modals';
 
 // Set the background color of all components to be white by default
 const CustomTheme = {
@@ -28,14 +31,23 @@ GoogleSignin.configure({
   webClientId: AppConfig.ANDROID_WEB_CLIENT_ID,
 });
 
+const modalStack: StackType = {
+  TestModal,
+};
+
 export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={CustomTheme}>
         <FlashMessageProvider>
           <LoadingProvider>
-            <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
-            <Router />
+            <ModalProvider stack={modalStack}>
+              <StatusBar
+                backgroundColor={colors.white}
+                barStyle="dark-content"
+              />
+              <Router />
+            </ModalProvider>
           </LoadingProvider>
         </FlashMessageProvider>
       </NavigationContainer>
