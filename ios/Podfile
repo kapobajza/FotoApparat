@@ -8,6 +8,12 @@ target 'FotoApparat' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  # Set up react-native-permissions
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+  # Required for camera permissions
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
+
   target 'FotoApparatTests' do
     inherit! :complete
     # Pods for testing

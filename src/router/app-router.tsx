@@ -1,15 +1,25 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerContentOptions,
+} from '@react-navigation/drawer';
 
-import StackNavWithoutHeader from './stack-nav-no-header';
 import { HomeScreen } from '../screens';
+import { DrawerContent } from '../components/drawer-content';
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function AppRouter() {
+  const customDrawerContent = (
+    props: DrawerContentComponentProps<DrawerContentOptions>,
+  ) => <DrawerContent {...props} />;
+
   return (
-    <StackNavWithoutHeader>
-      <Stack.Screen name="Home" component={HomeScreen} />
-    </StackNavWithoutHeader>
+    <Drawer.Navigator
+      screenOptions={{ headerShown: false }}
+      drawerContent={customDrawerContent}>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+    </Drawer.Navigator>
   );
 }
