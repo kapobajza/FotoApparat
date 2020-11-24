@@ -30,6 +30,12 @@ export interface GoogleDriveFile {
   mimeType: string;
 }
 
+export interface GoogleDriveResponse {
+  kind: string;
+  incompleteSearch: boolean;
+  files: [GoogleDriveFile];
+}
+
 export default class GoogleService {
   static signIn = async (): Promise<void> => {
     await GoogleSignin.hasPlayServices();
@@ -53,10 +59,24 @@ export default class GoogleService {
   static getFolderByName = async (
     name: string,
   ): Promise<GoogleDriveFile | null> => {
-    const { files } = await GoogleDriveService.get(
+    const { files }: GoogleDriveResponse = await GoogleDriveService.get(
       `files?q=name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
     );
 
     return files[0] ?? null;
+  };
+
+  static createDriveFolder = async (
+    name: string,
+  ): Promise<GoogleDriveFile | null> => {
+    const data: GoogleDriveFile = await GoogleDriveService.post(
+      'files?alt=json',
+      {
+        mimeType: 'application/vnd.google-apps.folder',
+        name,
+      },
+    );
+
+    return data ?? null;
   };
 }

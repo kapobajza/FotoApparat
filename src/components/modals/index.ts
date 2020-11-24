@@ -1,3 +1,3 @@
-import TestModal from './test';
+import ImageModal from './image';
 
-export { TestModal };
+export { ImageModal };

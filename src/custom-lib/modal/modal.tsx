@@ -11,6 +11,8 @@ import {
   TouchableWithoutFeedback,
   View,
   TouchableOpacity,
+  BackHandler,
+  NativeEventSubscription,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -30,14 +32,16 @@ interface Props {
 
 const { timing, Value } = Animated;
 
+let onBackPressListener: NativeEventSubscription | undefined;
+
 const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
   const insets = useSafeAreaInsets();
-  const [activeModal, setActiveModal] = useState<ReactNode>(() => null);
+  const [activeModal, setActiveModal] = useState<ReactNode | null>(null);
   const { translateY, slideInBottomAnim, slideOutBottomAnim } = useMemo(() => {
     const initialVal = sizes.windowSize.height + insets.bottom;
     const transY = new Value(initialVal);
     const useNativeDriver = true;
-    const duration = 600;
+    const duration = 400;
 
     return {
       translateY: transY,
@@ -57,7 +61,7 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
   const closeModal = () => {
     slideOutBottomAnim.start(({ finished }) => {
       if (finished) {
-        setActiveModal(() => null);
+        setActiveModal(null);
       }
     });
   };
@@ -89,6 +93,25 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
     if (activeModal) {
       slideInBottomAnim.start();
     }
+
+    const onBackPress = () => {
+      if (activeModal) {
+        closeModal();
+        return true;
+      }
+
+      return false;
+    };
+
+    onBackPressListener?.remove();
+    onBackPressListener = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onBackPress,
+    );
+
+    return () => {
+      onBackPressListener?.remove();
+    };
   }, [activeModal]);
 
   return (

@@ -6,13 +6,13 @@ import {
   View,
   TouchableOpacity,
   AppStateStatus,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RNCamera } from 'react-native-camera';
+import { RNCamera, TakePictureResponse } from 'react-native-camera';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-// import { Text } from '../components/text';
 import { CameraPermissionsNotGranted } from '../components/permissions';
 import { containerStyles } from '../styles';
 import { useLoading } from '../custom-lib/loading';
@@ -23,6 +23,7 @@ import {
 } from '../lib/permissions';
 import { colors } from '../styles';
 import { RootStackParamList } from '../router/types';
+import { useModal } from '../custom-lib/modal';
 
 interface Props {
   navigation: DrawerNavigationProp<RootStackParamList, 'Home'>;
@@ -34,7 +35,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   >('');
   const [imageShootLoading, setImageShootLoading] = useState(false);
   const { startLoading, stopLoading, isLoading } = useLoading();
+  const [latestImage, setLatestImage] = useState<
+    TakePictureResponse | undefined
+  >(undefined);
   const insets = useSafeAreaInsets();
+  const { openModal } = useModal();
 
   const appState = useRef(AppState.currentState);
 
@@ -79,13 +84,30 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         quality: 1,
         base64: true,
       });
-      console.log('data', data);
+      setLatestImage(data);
     } finally {
       setImageShootLoading(false);
     }
   };
 
   const onBarsButtonPress = () => navigation.toggleDrawer();
+
+  if (isLoading) {
+    return null;
+  }
+
+  let shotImageWidth = 120;
+  let shotImageHeight = 200;
+
+  if (
+    latestImage?.pictureOrientation === 3 ||
+    latestImage?.pictureOrientation === 4
+  ) {
+    shotImageWidth = 200;
+    shotImageHeight = 120;
+  }
+
+  const onImagePress = () => openModal('ImageModal', { image: latestImage });
 
   const MainComponent =
     cameraPermissionsResult === 'granted' ? (
@@ -104,7 +126,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-        {/* {latestImage?.uri ? (
+        {latestImage?.uri ? (
           <View style={[styles.topRightContainer, { top: 20 + insets.top }]}>
             <TouchableOpacity activeOpacity={0.7} onPress={onImagePress}>
               <Image
@@ -124,7 +146,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               />
             </TouchableOpacity>
           </View>
-        ) : null} */}
+        ) : null}
         <View style={[styles.bottomContainer, { bottom: 40 + insets?.bottom }]}>
           <TouchableOpacity
             style={[styles.shootPicButton]}
@@ -145,9 +167,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     );
 
   return (
-    <SafeAreaView style={containerStyles.fill}>
-      {!isLoading && MainComponent}
-    </SafeAreaView>
+    <SafeAreaView style={containerStyles.fill}>{MainComponent}</SafeAreaView>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View, Linking, Alert, Image } from 'react-native';
+import { StyleSheet, View, Alert, Image } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import {
   DrawerContentComponentProps,
@@ -12,6 +12,7 @@ import { DrawerButton } from '../../components/button';
 import { useFlashMessage } from '../../custom-lib/flash-message';
 import { useLoading } from '../../custom-lib/loading';
 import AuthContext from '../../contexts/auth-context';
+import FolderButton from './folder-button';
 
 const DrawerContent: React.FC<DrawerContentComponentProps<
   DrawerContentOptions
@@ -39,10 +40,6 @@ const DrawerContent: React.FC<DrawerContentComponentProps<
     ]);
   };
 
-  const onGoToFolderPress = async () => {
-    await Linking.openURL('');
-  };
-
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.container}>
@@ -51,11 +48,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps<
           resizeMode="contain"
           style={styles.logo}
         />
-        <DrawerButton
-          title="Go to drive folder"
-          iconName="folder"
-          onPress={onGoToFolderPress}
-        />
+        <FolderButton />
         <DrawerButton
           title="Sign out"
           iconName="sign-out"

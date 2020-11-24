@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   GestureResponderEvent,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -15,6 +16,7 @@ interface Props {
   iconName: string;
   iconSize?: number;
   onPress: (event: GestureResponderEvent) => void;
+  loading?: boolean;
 }
 
 const DrawerButton: React.FC<Props> = ({
@@ -22,16 +24,28 @@ const DrawerButton: React.FC<Props> = ({
   iconName,
   iconSize,
   onPress,
+  loading,
 }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <View style={styles.iconContainer}>
-        <Icon name={iconName} color={colors.gray600} size={iconSize || 18} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{title}</Text>
-      </View>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onPress}
+        disabled={loading}>
+        <View style={styles.iconContainer}>
+          <Icon name={iconName} color={colors.gray600} size={iconSize || 18} />
+        </View>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator color={colors.gray700} />
+          </View>
+        ) : (
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{title}</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -61,5 +75,9 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     alignItems: 'center',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    flex: 1,
   },
 });
