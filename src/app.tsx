@@ -13,7 +13,7 @@ import { FlashMessageProvider } from './custom-lib/flash-message';
 import { LoadingProvider } from './custom-lib/loading';
 import { ModalProvider } from './custom-lib/modal';
 import { StackType } from './custom-lib/modal/types';
-import { ImageModal } from './components/modals';
+import { ImageRatingModal } from './components/modals';
 
 // Set the background color of all components to be white by default
 const CustomTheme = {
@@ -32,7 +32,7 @@ GoogleSignin.configure({
 });
 
 const modalStack: StackType = {
-  ImageModal,
+  ImageRatingModal,
 };
 
 export default function App() {

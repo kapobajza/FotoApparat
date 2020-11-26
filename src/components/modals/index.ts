@@ -1,3 +1,3 @@
-import ImageModal from './image';
+import ImageRatingModal from './image-rating';
 
-export { ImageModal };
+export { ImageRatingModal };

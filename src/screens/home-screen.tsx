@@ -17,10 +17,7 @@ import { CameraPermissionsNotGranted } from '../components/permissions';
 import { containerStyles } from '../styles';
 import { useLoading } from '../custom-lib/loading';
 import { PermissionResultType } from '../lib/permissions/types';
-import {
-  checkCameraPermission,
-  checkAndRequestCameraPermission,
-} from '../lib/permissions';
+import { checkCameraPermission, checkAndRequestCameraPermission } from '../lib/permissions';
 import { colors } from '../styles';
 import { RootStackParamList } from '../router/types';
 import { useModal } from '../custom-lib/modal';
@@ -30,24 +27,17 @@ interface Props {
 }
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const [cameraPermissionsResult, setCameraPermissionsResult] = useState<
-    PermissionResultType
-  >('');
+  const [cameraPermissionsResult, setCameraPermissionsResult] = useState<PermissionResultType>('');
   const [imageShootLoading, setImageShootLoading] = useState(false);
   const { startLoading, stopLoading, isLoading } = useLoading();
-  const [latestImage, setLatestImage] = useState<
-    TakePictureResponse | undefined
-  >(undefined);
+  const [latestImage, setLatestImage] = useState<TakePictureResponse | undefined>(undefined);
   const insets = useSafeAreaInsets();
   const { openModal } = useModal();
 
   const appState = useRef(AppState.currentState);
 
   const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
+    if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
       const checkResult = await checkCameraPermission();
       setCameraPermissionsResult(checkResult);
     }
@@ -99,15 +89,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   let shotImageWidth = 120;
   let shotImageHeight = 200;
 
-  if (
-    latestImage?.pictureOrientation === 3 ||
-    latestImage?.pictureOrientation === 4
-  ) {
+  if (latestImage?.pictureOrientation === 3 || latestImage?.pictureOrientation === 4) {
     shotImageWidth = 200;
     shotImageHeight = 120;
   }
 
-  const onImagePress = () => openModal('ImageModal', { image: latestImage });
+  const onImagePress = () => openModal('ImageRatingModal', { image: latestImage });
 
   const MainComponent =
     cameraPermissionsResult === 'granted' ? (
@@ -126,27 +113,26 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-        {latestImage?.uri ? (
-          <View style={[styles.topRightContainer, { top: 20 + insets.top }]}>
-            <TouchableOpacity activeOpacity={0.7} onPress={onImagePress}>
-              <Image
-                source={{ uri: latestImage?.uri }}
-                style={[
-                  styles.shotImage,
-                  { width: shotImageWidth, height: shotImageHeight },
-                ]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onImagePress}>
-              <Icon
-                name="thumbs-up"
-                size={40}
-                color={colors.white}
-                style={styles.iconShadowStyle}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : null}
+        <View style={[styles.topRightContainer, { top: 20 + insets.top }]}>
+          {latestImage?.uri ? (
+            <View style={styles.topImageContainer}>
+              <TouchableOpacity activeOpacity={0.7} onPress={onImagePress}>
+                <Image
+                  source={{ uri: latestImage?.uri }}
+                  style={[styles.shotImage, { width: shotImageWidth, height: shotImageHeight }]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onImagePress}>
+                <Icon
+                  name="thumbs-up"
+                  size={40}
+                  color={colors.white}
+                  style={styles.iconShadowStyle}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+        </View>
         <View style={[styles.bottomContainer, { bottom: 40 + insets?.bottom }]}>
           <TouchableOpacity
             style={[styles.shootPicButton]}
@@ -166,9 +152,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
       <CameraPermissionsNotGranted result={cameraPermissionsResult} />
     );
 
-  return (
-    <SafeAreaView style={containerStyles.fill}>{MainComponent}</SafeAreaView>
-  );
+  return <SafeAreaView style={containerStyles.fill}>{MainComponent}</SafeAreaView>;
 };
 
 export default HomeScreen;
@@ -219,5 +203,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.white,
     textAlign: 'center',
+  },
+  topImageContainer: {
+    alignItems: 'center',
   },
 });
