@@ -11,14 +11,12 @@ import { DrawerContent } from '../components/drawer-content';
 const Drawer = createDrawerNavigator();
 
 export default function AppRouter() {
-  const customDrawerContent = (
-    props: DrawerContentComponentProps<DrawerContentOptions>,
-  ) => <DrawerContent {...props} />;
+  const customDrawerContent = (props: DrawerContentComponentProps<DrawerContentOptions>) => (
+    <DrawerContent {...props} />
+  );
 
   return (
-    <Drawer.Navigator
-      screenOptions={{ headerShown: false }}
-      drawerContent={customDrawerContent}>
+    <Drawer.Navigator screenOptions={{ headerShown: false }} drawerContent={customDrawerContent}>
       <Drawer.Screen name="Home" component={HomeScreen} />
     </Drawer.Navigator>
   );

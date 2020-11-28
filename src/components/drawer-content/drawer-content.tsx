@@ -1,10 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View, Alert, Image } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
-import {
-  DrawerContentComponentProps,
-  DrawerContentOptions,
-} from '@react-navigation/drawer';
+import { DrawerContentComponentProps, DrawerContentOptions } from '@react-navigation/drawer';
 
 import { GoogleService } from '../../services';
 
@@ -14,9 +11,7 @@ import { useLoading } from '../../custom-lib/loading';
 import AuthContext from '../../contexts/auth-context';
 import FolderButton from './folder-button';
 
-const DrawerContent: React.FC<DrawerContentComponentProps<
-  DrawerContentOptions
->> = (props) => {
+const DrawerContent: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
   const authContext = useContext(AuthContext);
   const { showError } = useFlashMessage();
   const { startLoading, stopLoading } = useLoading();
@@ -49,12 +44,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps<
           style={styles.logo}
         />
         <FolderButton />
-        <DrawerButton
-          title="Sign out"
-          iconName="sign-out"
-          iconSize={20}
-          onPress={onSignOutPress}
-        />
+        <DrawerButton title="Sign out" iconName="sign-out" iconSize={20} onPress={onSignOutPress} />
       </View>
     </DrawerContentScrollView>
   );

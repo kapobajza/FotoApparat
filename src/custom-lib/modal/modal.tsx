@@ -1,27 +1,15 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  ReactNode,
-  ComponentType,
-} from 'react';
+import React, { useState, useEffect, useMemo, ReactNode, ComponentType } from 'react';
 import {
   StyleSheet,
   Animated,
   TouchableWithoutFeedback,
   View,
-  TouchableOpacity,
   BackHandler,
   NativeEventSubscription,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import {
-  ModalContextType,
-  StackType,
-  ModalComponentPropsType,
-  ModalPropType,
-} from './types';
+import { ModalContextType, StackType, ModalComponentPropsType, ModalPropType } from './types';
 import { containerStyles, colors, sizes } from '../../styles';
 import ModalState from './state';
 
@@ -104,10 +92,7 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
     };
 
     onBackPressListener?.remove();
-    onBackPressListener = BackHandler.addEventListener(
-      'hardwareBackPress',
-      onBackPress,
-    );
+    onBackPressListener = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
     return () => {
       onBackPressListener?.remove();
@@ -116,19 +101,13 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
 
   return (
     <Animated.View
-      style={[
-        containerStyles.absoluteFill,
-        styles.container,
-        { transform: [{ translateY }] },
-      ]}>
-      <TouchableOpacity
-        onPress={closeModal}
-        style={containerStyles.absoluteFillAndCenter}
-        activeOpacity={1}>
-        <TouchableWithoutFeedback>
-          <View style={styles.innerContainer}>{activeModal}</View>
-        </TouchableWithoutFeedback>
-      </TouchableOpacity>
+      style={[containerStyles.absoluteFill, styles.root, { transform: [{ translateY }] }]}>
+      <View pointerEvents="box-none" style={[containerStyles.absoluteFill, styles.container]}>
+        {activeModal}
+      </View>
+      <TouchableWithoutFeedback onPress={closeModal}>
+        <View style={styles.modalOverlay} />
+      </TouchableWithoutFeedback>
     </Animated.View>
   );
 };
@@ -136,12 +115,24 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
 export default Modal;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.blackWithTransparency(0.7),
+  root: {
     zIndex: 0,
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
   innerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colors.blackWithTransparency(0.7),
   },
 });

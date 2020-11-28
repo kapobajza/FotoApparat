@@ -19,19 +19,10 @@ interface Props {
   loading?: boolean;
 }
 
-const DrawerButton: React.FC<Props> = ({
-  title,
-  iconName,
-  iconSize,
-  onPress,
-  loading,
-}) => {
+const DrawerButton: React.FC<Props> = ({ title, iconName, iconSize, onPress, loading }) => {
   return (
     <>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={onPress}
-        disabled={loading}>
+      <TouchableOpacity style={styles.button} onPress={onPress} disabled={loading}>
         <View style={styles.iconContainer}>
           <Icon name={iconName} color={colors.gray600} size={iconSize || 18} />
         </View>

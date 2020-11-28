@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   AppStateStatus,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RNCamera, TakePictureResponse } from 'react-native-camera';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+
+import { GoogleService } from '../services';
 
 import { CameraPermissionsNotGranted } from '../components/permissions';
 import { containerStyles } from '../styles';
@@ -21,6 +24,7 @@ import { checkCameraPermission, checkAndRequestCameraPermission } from '../lib/p
 import { colors } from '../styles';
 import { RootStackParamList } from '../router/types';
 import { useModal } from '../custom-lib/modal';
+import { useFlashMessage } from '../custom-lib/flash-message';
 
 interface Props {
   navigation: DrawerNavigationProp<RootStackParamList, 'Home'>;
@@ -29,10 +33,12 @@ interface Props {
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [cameraPermissionsResult, setCameraPermissionsResult] = useState<PermissionResultType>('');
   const [imageShootLoading, setImageShootLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const { startLoading, stopLoading, isLoading } = useLoading();
   const [latestImage, setLatestImage] = useState<TakePictureResponse | undefined>(undefined);
   const insets = useSafeAreaInsets();
   const { openModal } = useModal();
+  const { showError, showSuccess } = useFlashMessage();
 
   const appState = useRef(AppState.currentState);
 
@@ -94,7 +100,21 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     shotImageHeight = 120;
   }
 
-  const onImagePress = () => openModal('ImageRatingModal', { image: latestImage });
+  const onImageUpload = async (base64Uri: string, rating: number) => {
+    try {
+      setUploadLoading(true);
+      await GoogleService.uploadImageByRating(base64Uri, rating);
+      showSuccess('Uploaded image successfully!');
+    } catch (err) {
+      showError(err);
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const onImagePress = () => openModal('ImageRatingModal', { image: latestImage, onImageUpload });
+  const onRemoveImagePress = () => setLatestImage(undefined);
+  const onUploadProgressPress = () => openModal('UploadProgressModal');
 
   const MainComponent =
     cameraPermissionsResult === 'granted' ? (
@@ -113,6 +133,19 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
+        <View style={[styles.uploadContainer, { top: 80 + insets.top }]}>
+          {/* {uploadLoading ? ( */}
+          <TouchableOpacity style={[styles.uploadInnerContainer]} onPress={onUploadProgressPress}>
+            <Icon
+              name="upload"
+              size={30}
+              style={[styles.uploadIcon, styles.iconShadowStyle]}
+              color={colors.white}
+            />
+            <ActivityIndicator color={colors.white} />
+          </TouchableOpacity>
+          {/* ) : null} */}
+        </View>
         <View style={[styles.topRightContainer, { top: 20 + insets.top }]}>
           {latestImage?.uri ? (
             <View style={styles.topImageContainer}>
@@ -122,14 +155,24 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
                   style={[styles.shotImage, { width: shotImageWidth, height: shotImageHeight }]}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={onImagePress}>
-                <Icon
-                  name="thumbs-up"
-                  size={40}
-                  color={colors.white}
-                  style={styles.iconShadowStyle}
-                />
-              </TouchableOpacity>
+              <View style={styles.topIconsContainer}>
+                <TouchableOpacity onPress={onImagePress} style={styles.likeIconContainer}>
+                  <Icon
+                    name="thumbs-up"
+                    size={40}
+                    color={colors.white}
+                    style={styles.iconShadowStyle}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onRemoveImagePress}>
+                  <Icon
+                    name="times-circle"
+                    size={40}
+                    color={colors.white}
+                    style={styles.iconShadowStyle}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : null}
         </View>
@@ -206,5 +249,28 @@ const styles = StyleSheet.create({
   },
   topImageContainer: {
     alignItems: 'center',
+    marginBottom: 10,
+  },
+  topIconsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  likeIconContainer: {
+    marginRight: 10,
+  },
+  uploadContainer: {
+    position: 'absolute',
+    left: 20,
+    top: 50,
+  },
+  uploadInnerContainer: {
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: colors.blackWithTransparency(0.5),
+    borderRadius: 8,
+  },
+  uploadIcon: {
+    marginBottom: 10,
   },
 });

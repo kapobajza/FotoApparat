@@ -50,8 +50,8 @@ export default function WelcomeScreen() {
               resizeMode="contain"
             />
             <Text style={[styles.subtitle, styles.shadow]}>
-              Shoot fascinating photos, rate them and they will be automatically
-              saved to your Google Drive account and ordered accordingly!
+              Shoot fascinating photos, rate them and they will be automatically saved to your
+              Google Drive account and ordered accordingly!
             </Text>
           </View>
           <TouchableOpacity

@@ -14,19 +14,13 @@ const FolderButton = () => {
   const onGoToFolderPress = async () => {
     try {
       setLoading(true);
-      let folder = await GoogleService.getFolderByName(
-        AppConfig.GOOGLE_DRIVE_FOLDER_NAME,
-      );
+      let folder = await GoogleService.getFolderByName(AppConfig.GOOGLE_DRIVE_FOLDER_NAME);
 
       if (!folder) {
-        folder = await GoogleService.createDriveFolder(
-          AppConfig.GOOGLE_DRIVE_FOLDER_NAME,
-        );
+        folder = await GoogleService.createDriveFolder(AppConfig.GOOGLE_DRIVE_FOLDER_NAME);
       }
 
-      await Linking.openURL(
-        `https://drive.google.com/drive/folders/${folder?.id}`,
-      );
+      await Linking.openURL(`https://drive.google.com/drive/folders/${folder?.id}`);
     } catch (err) {
       showError(err);
     } finally {

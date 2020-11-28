@@ -34,12 +34,17 @@ const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
   const { showError } = useFlashMessage();
 
   const image: TakePictureResponse = getParam('image', undefined);
+  const onImageUpload: (
+    base64Uri: string,
+    rating: number,
+  ) => Promise<void> = getParam('onImageUpload', () => {});
 
-  const onRateButtonPress = () => {
+  const onRateButtonPress = async () => {
     if (selectedStar.rating <= 0) {
       showError({ message: 'Please select a rating first.' });
     } else {
       closeModal();
+      await onImageUpload(image?.base64 ?? '', selectedStar?.rating);
     }
   };
 
@@ -47,10 +52,7 @@ const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
     let newStars: StarType[] = [];
     let clickedStar = stars.find((star) => star.rating === rating);
 
-    if (
-      selectedStar?.rating === clickedStar?.rating &&
-      clickedStar.isSelected
-    ) {
+    if (selectedStar?.rating === clickedStar?.rating && clickedStar.isSelected) {
       newStars = STAR_RATINGS;
       clickedStar = initialStarRating;
     } else {
@@ -66,34 +68,19 @@ const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
 
   return (
     <View>
-      <Image
-        source={{ uri: image?.uri }}
-        style={styles.image}
-        resizeMode="contain"
-      />
+      <Image source={{ uri: image?.uri }} style={styles.image} resizeMode="contain" />
       <View style={styles.starsContainer}>
         {stars.map(({ isSelected, rating }) => {
           const onButtonPress = () => onStarPress(rating);
 
           return (
-            <TouchableOpacity
-              key={rating}
-              onPress={onButtonPress}
-              activeOpacity={0.85}>
-              <Icon
-                name="star"
-                size={40}
-                color={isSelected ? colors.gray600 : colors.white}
-              />
+            <TouchableOpacity key={rating} onPress={onButtonPress} activeOpacity={0.85}>
+              <Icon name="star" size={40} color={isSelected ? colors.gold : colors.white} />
             </TouchableOpacity>
           );
         })}
       </View>
-      <GradientButton
-        title="Rate"
-        onPress={onRateButtonPress}
-        containerStyle={styles.button}
-      />
+      <GradientButton title="Rate" onPress={onRateButtonPress} containerStyle={styles.button} />
     </View>
   );
 };
