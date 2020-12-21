@@ -7,7 +7,7 @@ import { MetadataType } from './types';
 const createMultiPartBody = async (
   base64Uri: string,
   metadata: MetadataType = {},
-  mediaType: string = 'image/jpg',
+  mediaType: string = 'image/jpeg',
 ) => {
   let body =
     `\n${ddb}\n` +

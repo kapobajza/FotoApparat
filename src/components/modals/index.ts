@@ -1,4 +1,4 @@
-import ImageRatingModal from './image-rating';
-import UploadProgressModal from './upload-progress';
+import ImageRatingModal from './ImageRating';
+import UploadProgressModal from './UploadProgress';
 
 export { ImageRatingModal, UploadProgressModal };

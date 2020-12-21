@@ -8,7 +8,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 
-import { Text } from '../text';
+import { Text } from '../../ComponentLibrary/Text';
 import { colors } from '../../styles';
 
 interface Props {
@@ -36,11 +36,7 @@ const Button: React.FC<Props> = ({
       onPress={onPress}
       style={[styles.container, containerStyle]}
       activeOpacity={activeOpacity || 0.5}>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <Text style={[styles.text, textStyle]}>{title}</Text>
-      )}
+      {loading ? <ActivityIndicator /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
     </TouchableOpacity>
   );
 };

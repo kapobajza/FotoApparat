@@ -13,8 +13,7 @@ const colors = {
   gray900: '#212529',
   gold: '#FFD700',
   disabledGray: '#D3D3D3',
-  blackWithTransparency: (transparency = 0.5) =>
-    `rgba(0, 0, 0, ${transparency})`,
+  blackWithTransparency: (transparency = 0.5) => `rgba(0, 0, 0, ${transparency})`,
   error: '#d9534f',
   info: '#5bc0de',
   success: '#5cb85c',

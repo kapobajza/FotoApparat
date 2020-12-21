@@ -1,4 +1,4 @@
-import WelcomeScreen from './welcome-screen';
-import HomeScreen from './home-screen';
+import WelcomeScreen from './WelcomeScreen';
+import HomeScreen from './HomeScreen';
 
 export { WelcomeScreen, HomeScreen };

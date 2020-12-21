@@ -1,5 +1,5 @@
-import Button from './button';
-import DrawerButton from './drawer-button';
-import GradientButton from './gradient-button';
+import Button from './Button';
+import DrawerButton from './DrawerButton';
+import GradientButton from './GradientButton';
 
 export { Button, DrawerButton, GradientButton };
