@@ -1,33 +1,26 @@
-// import React, { useContext } from 'react';
-import React from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  ImageBackground,
-  View,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import React, { useContext, useCallback } from 'react';
+import { StyleSheet, SafeAreaView, ImageBackground, View, Image } from 'react-native';
 import { statusCodes } from '@react-native-community/google-signin';
 
 import { GoogleService } from '../services';
 
 import { colors, containerStyles } from '../styles';
-import { Text } from '../ComponentLibrary/Text';
+import { Description } from '../Components/Text';
 import { useLoading } from '../ComponentLibrary/Loading';
 import { useFlashMessage } from '../ComponentLibrary/FlashMessage';
-// import AuthContext, { AuthContextType } from '../contexts/auth-context';
+import { AuthContext, AuthContextType } from '../contexts';
+import { GoogleSignInButton } from '../Components/Button';
 
 export default function WelcomeScreen() {
   const { startLoading, stopLoading } = useLoading();
   const { showError } = useFlashMessage();
-  // const authContext = useContext<AuthContextType>(AuthContext);
+  const authContext = useContext<AuthContextType>(AuthContext);
 
-  const onGSignInPress = async () => {
+  const onGSignInPress = useCallback(async () => {
     try {
       startLoading();
       await GoogleService.signIn();
-      // authContext.setIsSignedIn(true);
+      authContext.setIsSignedIn(true);
     } catch (err) {
       if (err?.code !== statusCodes.SIGN_IN_CANCELLED) {
         showError(err);
@@ -35,7 +28,7 @@ export default function WelcomeScreen() {
     } finally {
       stopLoading();
     }
-  };
+  }, [authContext, showError, startLoading, stopLoading]);
 
   return (
     <SafeAreaView style={containerStyles.fill}>
@@ -50,22 +43,12 @@ export default function WelcomeScreen() {
               style={styles.logo}
               resizeMode="contain"
             />
-            <Text style={[styles.subtitle, styles.shadow]}>
+            <Description>
               Shoot fascinating photos, rate them and they will be automatically saved to your
               Google Drive account and ordered accordingly!
-            </Text>
+            </Description>
           </View>
-          <TouchableOpacity
-            style={styles.gSignInContainer}
-            activeOpacity={0.7}
-            onPress={onGSignInPress}>
-            <Image
-              source={require('../../assets/images/google-logo.png')}
-              style={styles.googleLogo}
-              resizeMode="cover"
-            />
-            <Text style={styles.gSignInText}>Sign in with Google</Text>
-          </TouchableOpacity>
+          <GoogleSignInButton onPress={onGSignInPress} />
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -77,30 +60,6 @@ const styles = StyleSheet.create({
     marginVertical: 60,
     flex: 1,
     justifyContent: 'space-between',
-  },
-  googleLogo: {
-    width: 30,
-    height: 30,
-  },
-  gSignInContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    backgroundColor: colors.white,
-    alignSelf: 'center',
-    shadowColor: colors.black,
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
-    borderRadius: 4,
-    elevation: 6,
-  },
-  gSignInText: {
-    fontSize: 18,
-    marginLeft: 10,
-    fontWeight: 'bold',
-    color: colors.gray600,
   },
   shadow: {
     textShadowColor: colors.black,

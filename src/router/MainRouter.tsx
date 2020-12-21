@@ -5,7 +5,7 @@ import { GoogleService } from '../services';
 
 import AppRouter from './AppRouter';
 import AuthRouter from './AuthRouter';
-import { AuthProvider, AuthContextType } from '../contexts/auth-context';
+import { AuthProvider, AuthContextType } from '../contexts';
 import { useFlashMessage } from '../ComponentLibrary/FlashMessage';
 import { useLoading } from '../ComponentLibrary/Loading';
 
@@ -16,17 +16,17 @@ const MainRouter = () => {
 
   useEffect(() => {
     const initialCall = async () => {
-      try {
-        startLoading();
-        await GoogleService.signInSilently();
-        setIsSignedIn(true);
-      } catch (err) {
-        showError(err);
-        setIsSignedIn(false);
-      } finally {
-        stopLoading();
-        SplashScreen.hide();
-      }
+      // try {
+      //   startLoading();
+      //   await GoogleService.signInSilently();
+      //   setIsSignedIn(true);
+      // } catch (err) {
+      //   showError(err);
+      //   setIsSignedIn(false);
+      // } finally {
+      //   stopLoading();
+      //   SplashScreen.hide();
+      // }
     };
 
     initialCall();

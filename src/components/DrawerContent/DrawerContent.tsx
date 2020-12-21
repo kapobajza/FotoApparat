@@ -3,12 +3,10 @@ import { StyleSheet, View, Alert, Image } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { DrawerContentComponentProps, DrawerContentOptions } from '@react-navigation/drawer';
 
-import { GoogleService } from '../../services';
-
 import { DrawerButton } from '../Button';
 import { useFlashMessage } from '../../ComponentLibrary/FlashMessage';
 import { useLoading } from '../../ComponentLibrary/Loading';
-import AuthContext from '../../contexts/auth-context';
+import { AuthContext } from '../../contexts';
 import FolderButton from './FolderButton';
 
 const DrawerContent: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
@@ -19,7 +17,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
   const onYessPress = useCallback(async () => {
     try {
       startLoading();
-      await GoogleService.signOut();
+      // await GoogleService.signOut();
       authContext.setIsSignedIn(false);
     } catch (err) {
       showError(err);
