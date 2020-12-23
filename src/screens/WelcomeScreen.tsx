@@ -2,7 +2,7 @@ import React, { useContext, useCallback } from 'react';
 import { StyleSheet, SafeAreaView, ImageBackground, View, Image } from 'react-native';
 import { statusCodes } from '@react-native-community/google-signin';
 
-import { GoogleService } from '../services';
+import { AuthService } from '../services';
 
 import { colors, containerStyles } from '../styles';
 import { Description } from '../Components/Text';
@@ -19,7 +19,7 @@ export default function WelcomeScreen() {
   const onGSignInPress = useCallback(async () => {
     try {
       startLoading();
-      await GoogleService.signIn();
+      await AuthService.googleSignIn();
       authContext.setIsSignedIn(true);
     } catch (err) {
       if (err?.code !== statusCodes.SIGN_IN_CANCELLED) {

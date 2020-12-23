@@ -1,10 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { Linking } from 'react-native';
-
-import { GoogleService } from '../../services';
+// import { Linking } from 'react-native';
 
 import { DrawerButton } from '../Button';
-import { config } from '../../config';
 import { useFlashMessage } from '../../ComponentLibrary/FlashMessage';
 
 const FolderButton = () => {
@@ -14,13 +11,13 @@ const FolderButton = () => {
   const onGoToFolderPress = useCallback(async () => {
     try {
       setLoading(true);
-      let folder = await GoogleService.getFolderByName(config.GOOGLE_DRIVE_FOLDER_NAME);
+      // let folder = await GoogleService.getFolderByName(config.GOOGLE_DRIVE_FOLDER_NAME);
 
-      if (!folder) {
-        folder = await GoogleService.createDriveFolder(config.GOOGLE_DRIVE_FOLDER_NAME);
-      }
+      // if (!folder) {
+      //   folder = await GoogleService.createDriveFolder(config.GOOGLE_DRIVE_FOLDER_NAME);
+      // }
 
-      await Linking.openURL(`https://drive.google.com/drive/folders/${folder?.id}`);
+      // await Linking.openURL(`https://drive.google.com/drive/folders/${folder?.id}`);
     } catch (err) {
       showError(err);
     } finally {

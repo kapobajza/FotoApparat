@@ -1,5 +1,5 @@
 import StorageService from './StorageService';
-import GoogleService from './GoogleService';
+import AuthService from './AuthService';
 import ApiService from './ApiService';
 
-export { StorageService, GoogleService, ApiService };
+export { StorageService, AuthService, ApiService };

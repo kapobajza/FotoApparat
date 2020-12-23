@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 
-import { GoogleService } from '../services';
+import { AuthService } from '../services';
 
 import AppRouter from './AppRouter';
 import AuthRouter from './AuthRouter';
@@ -16,21 +16,22 @@ const MainRouter = () => {
 
   useEffect(() => {
     const initialCall = async () => {
-      // try {
-      //   startLoading();
-      //   await GoogleService.signInSilently();
-      //   setIsSignedIn(true);
-      // } catch (err) {
-      //   showError(err);
-      //   setIsSignedIn(false);
-      // } finally {
-      //   stopLoading();
-      //   SplashScreen.hide();
-      // }
+      try {
+        startLoading();
+        await AuthService.refreshToken();
+        setIsSignedIn(true);
+      } catch (err) {
+        showError(err);
+        setIsSignedIn(false);
+      } finally {
+        stopLoading();
+        SplashScreen.hide();
+      }
     };
 
     initialCall();
-  }, [showError, startLoading, stopLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const contextValue: AuthContextType = useMemo(
     () => ({
