@@ -8,5 +8,5 @@ export interface ContainerStylesType {
 }
 
 export interface TextShadowStylesType {
-  commonBlackShadow: TextStyle;
+  commonBlack: TextStyle;
 }

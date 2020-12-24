@@ -64,3 +64,4 @@ buck-out/
 
 # Ignore the config file
 /src/config/config.ts
+/src/config/ip.json

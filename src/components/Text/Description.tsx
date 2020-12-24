@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Description: React.FC<Props> = ({ children, style }) => {
-  return <Text style={[textShadows.commonBlackShadow, styles.text, style]}>{children}</Text>;
+  return <Text style={[textShadows.commonBlack, styles.text, style]}>{children}</Text>;
 };
 
 export default Description;

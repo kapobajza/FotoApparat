@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 
 import { containerStyles, colors } from '../../styles';
 import { LoadingContextType } from './types';
 import LoadingState from './State';
+import { useMountEffect } from '../hooks';
 
 interface Props {
   setContextValue: (val: LoadingContextType) => void;
@@ -21,11 +22,10 @@ const Loading: React.FC<Props> = ({ setContextValue }) => {
     [loading],
   );
 
-  useEffect(() => {
+  useMountEffect(() => {
     LoadingState.init(contextValue);
     setContextValue(contextValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   if (!loading) {
     return null;

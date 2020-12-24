@@ -17,9 +17,6 @@ export function decode(token: string, options?: JwtDecodeOptions) {
 export function hasTokenExpired(token: string) {
   const { exp } = decode(token);
 
-  console.log('exp', exp);
-  console.log('moment().unix()', moment().unix());
-
   if (moment().unix() > exp) {
     return true;
   }

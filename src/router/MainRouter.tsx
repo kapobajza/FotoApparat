@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 
 import { AuthService } from '../services';
@@ -8,13 +8,14 @@ import AuthRouter from './AuthRouter';
 import { AuthProvider, AuthContextType } from '../contexts';
 import { useFlashMessage } from '../ComponentLibrary/FlashMessage';
 import { useLoading } from '../ComponentLibrary/Loading';
+import { useMountEffect } from '../ComponentLibrary/hooks';
 
 const MainRouter = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const { showError } = useFlashMessage();
   const { startLoading, stopLoading } = useLoading();
 
-  useEffect(() => {
+  useMountEffect(() => {
     const initialCall = async () => {
       try {
         startLoading();
@@ -30,8 +31,7 @@ const MainRouter = () => {
     };
 
     initialCall();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   const contextValue: AuthContextType = useMemo(
     () => ({

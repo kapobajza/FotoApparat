@@ -1,4 +1,4 @@
 import WelcomeScreen from './WelcomeScreen';
-import HomeScreen from './HomeScreen';
+import CameraScreen from './CameraScreen';
 
-export { WelcomeScreen, HomeScreen };
+export { WelcomeScreen, CameraScreen };

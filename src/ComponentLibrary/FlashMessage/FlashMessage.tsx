@@ -7,6 +7,7 @@ import { MessageType, FlashMessageContextType } from './types';
 import { colors, sizes } from '../../styles';
 import { Text } from '../Text';
 import FlashMessageState from './State';
+import { useMountEffect } from '../hooks';
 
 let timeoutId: any = null;
 
@@ -74,7 +75,7 @@ const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
     [removeMessageAfterTimeout],
   );
 
-  useEffect(() => {
+  useMountEffect(() => {
     // Initialize the centralized state
     FlashMessageState.init(contextValue);
     setContextValue(contextValue);
@@ -82,8 +83,7 @@ const FlashMessage: React.FC<Props> = ({ setContextValue, timeout }) => {
     return () => {
       clearTimeout(timeoutId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   useEffect(() => {
     if (message) {

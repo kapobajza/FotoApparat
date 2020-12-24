@@ -5,8 +5,8 @@ import {
   DrawerContentOptions,
 } from '@react-navigation/drawer';
 
-import { HomeScreen } from '../screens';
-import { DrawerContent } from '../Components/DrawerContent';
+import { CameraScreen } from '../screens';
+import { DrawerContent } from '../Components/Drawer';
 
 const Drawer = createDrawerNavigator();
 
@@ -17,7 +17,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps<DrawerContentOpt
 export default function AppRouter() {
   return (
     <Drawer.Navigator screenOptions={{ headerShown: false }} drawerContent={CustomDrawerContent}>
-      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Camera" component={CameraScreen} />
     </Drawer.Navigator>
   );
 }

@@ -1,3 +1,3 @@
-import CameraPermissionsNotGranted from './camera-permission-not-granted';
+import CameraPermissionsNotGranted from './CameraPermissionNotGranted';
 
 export { CameraPermissionsNotGranted };

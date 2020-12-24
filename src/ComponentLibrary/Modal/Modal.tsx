@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModalContextType, StackType, ModalComponentPropsType, ModalPropType } from './types';
 import { containerStyles, colors, sizes } from '../../styles';
 import ModalState from './State';
+import { useMountEffect } from '../hooks';
 
 interface Props {
   stack: StackType;
@@ -75,11 +76,10 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
     [closeModal, stack],
   );
 
-  useEffect(() => {
+  useMountEffect(() => {
     ModalState.init(contextValue);
     setContextValue(contextValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   useEffect(() => {
     if (activeModal) {

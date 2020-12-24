@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { Button } from '../button';
-import { Text } from '../text';
+import { Button } from '../Button';
+import { Text } from '../../ComponentLibrary/Text';
 import { showCameraPermissionsAlert } from '../../lib/permissions';
 import { PermissionResultType } from '../../lib/permissions/types';
 import { containerStyles } from '../../styles';
@@ -13,19 +13,22 @@ interface Props {
 }
 
 const CameraPermissionNotGranted: React.FC<Props> = ({ result }) => {
-  const onGrantPermissionsPress = () => {
+  const onGrantPermissionsPress = useCallback(() => {
     if (result === 'granted') {
     } else {
       showCameraPermissionsAlert();
     }
-  };
+  }, [result]);
 
-  const buttonTitle =
-    result === 'granted' ? 'Reaload app' : 'Grant permissions';
-  const text =
-    result === 'granted'
-      ? 'Resulsts granted, reload the app'
-      : 'You will have to grant camera permissions in order to use this app';
+  const { buttonTitle, text } = useMemo(() => {
+    const buttonTitle = result === 'granted' ? 'Reaload app' : 'Grant permissions';
+    const text =
+      result === 'granted'
+        ? 'Resulsts granted, reload the app'
+        : 'You will have to grant camera permissions in order to use this app';
+
+    return { buttonTitle, text };
+  }, [result]);
 
   return (
     <View style={containerStyles.fillAndCenter}>

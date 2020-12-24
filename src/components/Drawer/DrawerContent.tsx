@@ -8,6 +8,7 @@ import { useFlashMessage } from '../../ComponentLibrary/FlashMessage';
 import { useLoading } from '../../ComponentLibrary/Loading';
 import { AuthContext } from '../../contexts';
 import FolderButton from './FolderButton';
+import { AuthService } from '../../services';
 
 const DrawerContent: React.FC<DrawerContentComponentProps<DrawerContentOptions>> = (props) => {
   const authContext = useContext(AuthContext);
@@ -17,7 +18,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps<DrawerContentOptions>>
   const onYessPress = useCallback(async () => {
     try {
       startLoading();
-      // await GoogleService.signOut();
+      await AuthService.signOut();
       authContext.setIsSignedIn(false);
     } catch (err) {
       showError(err);

@@ -41,6 +41,11 @@ class AuthService {
 
     return newToken;
   }
+
+  async signOut(): Promise<void> {
+    await GoogleSignin.signOut();
+    await StorageService.clear();
+  }
 }
 
 export default new AuthService();
