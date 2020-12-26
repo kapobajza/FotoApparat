@@ -12,7 +12,7 @@ import { config } from './config';
 import { FlashMessageProvider } from './ComponentLibrary/FlashMessage';
 import { LoadingProvider } from './ComponentLibrary/Loading';
 import { ModalProvider } from './ComponentLibrary/Modal';
-import { ImageRatingModal, UploadProgressModal } from './Components/Modals';
+import { ImageRatingModal } from './Components/Camera';
 
 // Set the background color of all components to be white by default
 const CustomTheme = {
@@ -33,7 +33,6 @@ GoogleSignin.configure({
 
 const modalStack = {
   ImageRatingModal,
-  UploadProgressModal,
 };
 
 export default function App() {

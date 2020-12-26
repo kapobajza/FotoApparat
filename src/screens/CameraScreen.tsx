@@ -279,12 +279,13 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, AppState, AppStateStatus } from 'react-native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { RNCamera } from 'react-native-camera';
+import { RNCamera, TakePictureResponse } from 'react-native-camera';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { RootStackParamList } from '../router';
 import { useLoading } from '../ComponentLibrary/Loading';
+import { useModal } from '../ComponentLibrary/Modal';
 import { colors, iconShadows, containerStyles } from '../styles';
 import {
   checkCameraPermission,
@@ -293,6 +294,7 @@ import {
 } from '../lib/permissions';
 import { CameraPermissionsNotGranted } from '../Components/Permissions';
 import { DrawerBarsButton } from '../Components/Drawer';
+import { TopImageDisplay } from '../Components/Camera';
 
 interface Props {
   navigation: DrawerNavigationProp<RootStackParamList, 'Camera'>;
@@ -302,6 +304,9 @@ const HomeScreen: React.FC<Props> = () => {
   const { startLoading, stopLoading, isLoading } = useLoading();
   const [imageShootLoading, setImageShootLoading] = useState(false);
   const [cameraPermissionsResult, setCameraPermissionsResult] = useState<PermissionResultType>('');
+  const [latestImage, setLatestImage] = useState<TakePictureResponse | undefined>(undefined);
+  const { openModal } = useModal();
+
   const cameraRef = useRef<RNCamera>(null);
   const insets = useSafeAreaInsets();
 
@@ -339,13 +344,24 @@ const HomeScreen: React.FC<Props> = () => {
   const onShootPicPress = useCallback(async () => {
     try {
       setImageShootLoading(true);
-      await cameraRef.current?.takePictureAsync({
+      const pic = await cameraRef.current?.takePictureAsync({
         quality: 1,
         base64: true,
       });
+
+      setLatestImage(pic);
     } finally {
       setImageShootLoading(false);
     }
+  }, []);
+
+  const onDisplayImagePress = useCallback(() => {
+    openModal('ImageRatingModal', { uri: latestImage?.uri });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latestImage?.uri, openModal]);
+
+  const onDisplayRemoveImagePress = useCallback(() => {
+    setLatestImage(undefined);
   }, []);
 
   if (isLoading) {
@@ -365,6 +381,14 @@ const HomeScreen: React.FC<Props> = () => {
         captureAudio={false}>
         <View style={[styles.topLeftContainer, { top: 20 + insets.top }]}>
           <DrawerBarsButton />
+        </View>
+        <View style={[styles.topRightContainer, { top: 20 + insets.top }]}>
+          <TopImageDisplay
+            uri={latestImage?.uri ?? ''}
+            pictureOrientation={latestImage?.pictureOrientation ?? 0}
+            onImagePress={onDisplayImagePress}
+            onRemoveImagePress={onDisplayRemoveImagePress}
+          />
         </View>
         <View style={[styles.bottomContainer, { bottom: 40 + insets?.bottom }]}>
           <TouchableOpacity
@@ -397,6 +421,11 @@ const styles = StyleSheet.create({
   topLeftContainer: {
     position: 'absolute',
     left: 20,
+    alignItems: 'center',
+  },
+  topRightContainer: {
+    position: 'absolute',
+    right: 20,
     alignItems: 'center',
   },
 });

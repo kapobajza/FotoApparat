@@ -9,6 +9,7 @@ const mainConfig = {
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/drive.file',
   ],
+  LOG_API_REQUESTS: true,
 };
 
 export default {
