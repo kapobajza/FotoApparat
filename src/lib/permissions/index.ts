@@ -2,7 +2,7 @@ import {
   checkAndRequestCameraPermission,
   showCameraPermissionsAlert,
   checkCameraPermission,
-} from './get-permissions';
+} from './getPermissions';
 
 export * from './types';
 

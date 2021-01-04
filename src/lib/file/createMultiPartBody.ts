@@ -4,7 +4,7 @@ const ending = `\n${ddb}--`;
 
 import { MetadataType } from './types';
 
-const createMultiPartBody = async (
+const createMultiPartBody = (
   base64Uri: string,
   metadata: MetadataType = {},
   mediaType: string = 'image/jpeg',

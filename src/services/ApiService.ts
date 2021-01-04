@@ -1,33 +1,13 @@
 import axios from 'axios';
 
-import StorageService from './StorageService';
-import { config, EnvironmentType } from '../config';
+import { config } from '../config';
+import { requestInterceptor, responseInterceptor } from '../lib/interceptors';
 
 const ApiServiceInstance = axios.create({
   baseURL: config.API_BASE_URL,
 });
 
-const currentEnvironment = config.ENVIRONMENT as EnvironmentType;
-
-ApiServiceInstance.interceptors.request.use(async (cfg) => {
-  const token = await StorageService.getAuthToken();
-
-  if (token) {
-    cfg.headers.authorization = `Bearer ${token}`;
-  }
-
-  return cfg;
-});
-
-ApiServiceInstance.interceptors.response.use((response) => {
-  if (
-    config.LOG_API_REQUESTS &&
-    (currentEnvironment === 'local' || currentEnvironment === 'development')
-  ) {
-    console.log('response', response);
-  }
-
-  return response?.data ?? response;
-});
+ApiServiceInstance.interceptors.request.use(requestInterceptor());
+ApiServiceInstance.interceptors.response.use(responseInterceptor);
 
 export default ApiServiceInstance;

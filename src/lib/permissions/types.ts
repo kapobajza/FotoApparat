@@ -1,6 +1,1 @@
-export type PermissionResultType =
-  | 'unavailable'
-  | 'denied'
-  | 'blocked'
-  | 'granted'
-  | '';
+export type PermissionResultType = 'unavailable' | 'denied' | 'blocked' | 'granted' | '';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 
 import { ModalComponentPropsType } from '../../ComponentLibrary/Modal';
@@ -11,20 +11,27 @@ const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
 }) => {
   const { showError } = useFlashMessage();
 
-  const uri: string = getParam('uri', undefined);
-  const onImageUpload: (
-    base64Uri: string,
-    rating: number,
-  ) => Promise<void> = getParam('onImageUpload', () => {});
+  const { uri, onImageUpload } = useMemo(() => {
+    const uri: string = getParam('uri', undefined);
+    const onImageUpload: (
+      base64Uri: string,
+      rating: number,
+    ) => Promise<void> = getParam('onImageUpload', () => {});
 
-  const onRateButtonPress = async (rating: number) => {
-    if (rating <= 0) {
-      showError({ message: 'Please select a rating first.' });
-    } else {
-      closeModal();
-      await onImageUpload(uri ?? '', rating);
-    }
-  };
+    return { uri, onImageUpload };
+  }, [getParam]);
+
+  const onRateButtonPress = useCallback(
+    async (rating: number) => {
+      if (rating <= 0) {
+        showError({ message: 'Please select a rating first.' });
+      } else {
+        closeModal();
+        await onImageUpload(uri ?? '', rating);
+      }
+    },
+    [closeModal, onImageUpload, showError, uri],
+  );
 
   return (
     <View>

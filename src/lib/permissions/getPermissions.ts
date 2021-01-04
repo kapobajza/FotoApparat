@@ -1,20 +1,12 @@
 import { Platform, Alert } from 'react-native';
-import {
-  PERMISSIONS,
-  check,
-  request,
-  RESULTS,
-  openSettings,
-} from 'react-native-permissions';
+import { PERMISSIONS, check, request, RESULTS, openSettings } from 'react-native-permissions';
 
 import { PermissionResultType } from './types';
 
 const CAMERA_PERMISSION =
   Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA;
 
-export const checkAndRequestCameraPermission = async (): Promise<
-  PermissionResultType
-> => {
+export const checkAndRequestCameraPermission = async (): Promise<PermissionResultType> => {
   try {
     const checkRes = await check(CAMERA_PERMISSION);
 
@@ -29,9 +21,7 @@ export const checkAndRequestCameraPermission = async (): Promise<
   }
 };
 
-export const checkCameraPermission = async (): Promise<
-  PermissionResultType
-> => {
+export const checkCameraPermission = async (): Promise<PermissionResultType> => {
   try {
     const checkRes = await check(CAMERA_PERMISSION);
     return checkRes;

@@ -22,8 +22,11 @@ class AuthService {
       code: serverAuthCode,
     });
 
+    const { accessToken } = await GoogleSignin.getTokens();
+
     await StorageService.setAuthToken(token);
     await StorageService.setRefreshToken(refreshToken);
+    await StorageService.setGoogleAccessToken(accessToken);
   }
 
   async refreshToken() {
