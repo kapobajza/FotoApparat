@@ -64,6 +64,19 @@ class GoogleService {
     return data ?? null;
   };
 
+  createOrGetFolder = async (
+    name: string,
+    parent: string = '',
+  ): Promise<GoogleDriveFileType | null> => {
+    let folder = await this.getFolderByName(name);
+
+    if (!folder) {
+      folder = await this.createDriveFolder(name, parent);
+    }
+
+    return folder;
+  };
+
   uploadMultiPartFile = async (
     base64Uri: string,
     metadata: MetadataType = {},

@@ -2,12 +2,11 @@ import { AxiosResponse } from 'axios';
 
 import { config, EnvironmentType } from '../../config';
 
-const currentEnvironment = config.ENVIRONMENT as EnvironmentType;
-
 export default async function (response: AxiosResponse<any>) {
   if (
     config.LOG_API_REQUESTS &&
-    (currentEnvironment === 'local' || currentEnvironment === 'development')
+    (config.ENVIRONMENT === EnvironmentType.LOCAL ||
+      config.ENVIRONMENT === EnvironmentType.DEVELOPMENT)
   ) {
     console.log('response', response);
   }

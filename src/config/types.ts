@@ -1,1 +1,4 @@
-export type EnvironmentType = 'local' | 'development';
+export enum EnvironmentType {
+  LOCAL = 'local',
+  DEVELOPMENT = 'development',
+}

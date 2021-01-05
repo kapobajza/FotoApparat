@@ -5,9 +5,12 @@ import { RNCamera, TakePictureResponse } from 'react-native-camera';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import { GoogleService } from '../services';
+
 import { RootStackParamList } from '../router';
 import { useLoading } from '../ComponentLibrary/Loading';
 import { useModal } from '../ComponentLibrary/Modal';
+import { useFlashMessage } from '../ComponentLibrary/FlashMessage';
 import { colors, iconShadows, containerStyles } from '../styles';
 import {
   checkCameraPermission,
@@ -16,7 +19,9 @@ import {
 } from '../lib/permissions';
 import { CameraPermissionsNotGranted } from '../Components/Permissions';
 import { DrawerBarsButton } from '../Components/Drawer';
-import { TopImageDisplay } from '../Components/Camera';
+import { TopImageDisplay, ImageRatingModalParamsType } from '../Components/Camera';
+import { config } from '../config';
+import { generateFileName } from '../lib/file';
 
 interface Props {
   navigation: DrawerNavigationProp<RootStackParamList, 'Camera'>;
@@ -28,6 +33,7 @@ const CameraScreen: React.FC<Props> = () => {
   const [cameraPermissionsResult, setCameraPermissionsResult] = useState<PermissionResultType>('');
   const [latestImage, setLatestImage] = useState<TakePictureResponse | undefined>(undefined);
   const { openModal } = useModal();
+  const { showError } = useFlashMessage();
 
   const cameraRef = useRef<RNCamera>(null);
   const insets = useSafeAreaInsets();
@@ -78,9 +84,32 @@ const CameraScreen: React.FC<Props> = () => {
   }, []);
 
   const onDisplayImagePress = useCallback(() => {
-    openModal('ImageRatingModal', { uri: latestImage?.uri });
+    const onImageUpload = async (base64Uri: string, rating: number) => {
+      try {
+        startLoading();
+        const parentFolderRes = await GoogleService.getFolderByName(
+          config.GOOGLE_DRIVE_FOLDER_NAME,
+        );
+        const folderRes = await GoogleService.createOrGetFolder(`${rating}`, parentFolderRes?.id);
+
+        await GoogleService.uploadMultiPartFile(base64Uri, {
+          parents: [folderRes?.id ?? ''],
+          name: generateFileName(),
+        });
+      } catch (err) {
+        showError(err);
+      } finally {
+        stopLoading();
+      }
+    };
+
+    openModal<ImageRatingModalParamsType>('ImageRatingModal', {
+      uri: latestImage?.uri,
+      onImageUpload,
+      base64Image: latestImage?.base64 ?? '',
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [latestImage?.uri, openModal]);
+  }, [latestImage?.uri, openModal, latestImage?.base64]);
 
   const onDisplayRemoveImagePress = useCallback(() => {
     setLatestImage(undefined);

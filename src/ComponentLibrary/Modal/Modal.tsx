@@ -57,14 +57,19 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
 
   const contextValue: ModalContextType = useMemo(
     () => ({
-      openModal: (name, params = {}) => {
+      openModal: (name, params) => {
         const stackProp = stack[name];
 
         if (stackProp) {
           const StackComponent: ComponentType<ModalComponentPropsType> = stackProp;
+          let paramsMap: { [key: string]: any } = {};
+
+          if (params) {
+            paramsMap = params as { [key: string]: any };
+          }
 
           const modalProps: ModalPropType = {
-            getParam: (n, fallback) => params[n] || fallback,
+            getParam: (n, fallback) => paramsMap[n] || fallback,
             closeModal,
           };
 

@@ -5,20 +5,22 @@ import { ModalComponentPropsType } from '../../ComponentLibrary/Modal';
 import { sizes, colors } from '../../styles';
 import { useFlashMessage } from '../../ComponentLibrary/FlashMessage';
 import { StarRating } from '../Ratings';
+import { ImageRatingModalParamsType } from './types';
 
 const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
   modal: { getParam, closeModal },
 }) => {
   const { showError } = useFlashMessage();
 
-  const { uri, onImageUpload } = useMemo(() => {
+  const { uri, onImageUpload, base64Image } = useMemo<ImageRatingModalParamsType>(() => {
     const uri: string = getParam('uri', undefined);
     const onImageUpload: (
       base64Uri: string,
       rating: number,
     ) => Promise<void> = getParam('onImageUpload', () => {});
+    const base64Image = getParam('base64Image', undefined);
 
-    return { uri, onImageUpload };
+    return { uri, onImageUpload, base64Image };
   }, [getParam]);
 
   const onRateButtonPress = useCallback(
@@ -27,10 +29,10 @@ const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
         showError({ message: 'Please select a rating first.' });
       } else {
         closeModal();
-        await onImageUpload(uri ?? '', rating);
+        await onImageUpload(base64Image ?? '', rating);
       }
     },
-    [closeModal, onImageUpload, showError, uri],
+    [closeModal, onImageUpload, showError, base64Image],
   );
 
   return (
