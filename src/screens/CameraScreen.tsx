@@ -19,7 +19,7 @@ import {
 } from '../lib/permissions';
 import { CameraPermissionsNotGranted } from '../Components/Permissions';
 import { DrawerBarsButton } from '../Components/Drawer';
-import { TopImageDisplay, ImageRatingModalParamsType } from '../Components/Camera';
+import { TopImageDisplay, ImageRatingModalParamsType, UploadButton } from '../Components/Camera';
 import { config } from '../config';
 import { generateFileName } from '../lib/file';
 
@@ -32,6 +32,7 @@ const CameraScreen: React.FC<Props> = () => {
   const [imageShootLoading, setImageShootLoading] = useState(false);
   const [cameraPermissionsResult, setCameraPermissionsResult] = useState<PermissionResultType>('');
   const [latestImage, setLatestImage] = useState<TakePictureResponse | undefined>(undefined);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const { openModal } = useModal();
   const { showError } = useFlashMessage();
 
@@ -84,22 +85,25 @@ const CameraScreen: React.FC<Props> = () => {
   }, []);
 
   const onDisplayImagePress = useCallback(() => {
-    const onImageUpload = async (base64Uri: string, rating: number) => {
+    const onImageUpload = async (base64Image: string, rating: number) => {
       try {
-        startLoading();
+        setUploadingImage(true);
         const parentFolderRes = await GoogleService.getFolderByName(
           config.GOOGLE_DRIVE_FOLDER_NAME,
         );
-        const folderRes = await GoogleService.createOrGetFolder(`${rating}`, parentFolderRes?.id);
+        const folderRes = await GoogleService.createOrGetFolder(
+          `${rating}-stars`,
+          parentFolderRes?.id,
+        );
 
-        await GoogleService.uploadMultiPartFile(base64Uri, {
+        await GoogleService.uploadMultiPartFile(base64Image, {
           parents: [folderRes?.id ?? ''],
           name: generateFileName(),
         });
       } catch (err) {
         showError(err);
       } finally {
-        stopLoading();
+        setUploadingImage(false);
       }
     };
 
@@ -132,6 +136,9 @@ const CameraScreen: React.FC<Props> = () => {
         captureAudio={false}>
         <View style={[styles.topLeftContainer, { top: 20 + insets.top }]}>
           <DrawerBarsButton />
+          <View style={styles.uploadContainer}>
+            <UploadButton uploading={uploadingImage} />
+          </View>
         </View>
         <View style={[styles.topRightContainer, { top: 20 + insets.top }]}>
           <TopImageDisplay
@@ -172,12 +179,14 @@ const styles = StyleSheet.create({
   topLeftContainer: {
     position: 'absolute',
     left: 20,
-    alignItems: 'center',
   },
   topRightContainer: {
     position: 'absolute',
     right: 20,
     alignItems: 'center',
+  },
+  uploadContainer: {
+    marginTop: 15,
   },
 });
 

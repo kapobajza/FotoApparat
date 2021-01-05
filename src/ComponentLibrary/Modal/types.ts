@@ -1,8 +1,8 @@
 import { ComponentType } from 'react';
 
 export interface ModalContextType {
-  openModal<T>(name: string, params?: T): void;
-  closeModal(): void;
+  openModal: <T>(name: string, params?: T) => void;
+  closeModal: () => void;
 }
 
 export interface ModalPropType {
