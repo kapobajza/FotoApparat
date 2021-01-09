@@ -18,7 +18,9 @@ class AuthService {
     await GoogleSignin.hasPlayServices();
     const { serverAuthCode } = await GoogleSignin.signIn();
 
-    const { token, refreshToken } = await ApiService.post<GoogleSignInResponseType>('auth/google', {
+    const {
+      data: { token, refreshToken },
+    } = await ApiService.post<GoogleSignInResponseType>('auth/google', {
       code: serverAuthCode,
     });
 
@@ -34,7 +36,9 @@ class AuthService {
     let newToken = await StorageService.getAuthToken();
 
     if (hasTokenExpired(newToken)) {
-      const { token } = await ApiService.post<RefreshTokenResponseType>('auth/refresh-token', {
+      const {
+        data: { token },
+      } = await ApiService.post<RefreshTokenResponseType>('auth/refresh-token', {
         refreshToken,
       });
 

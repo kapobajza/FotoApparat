@@ -257,13 +257,13 @@ PODS:
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
   - React-jsinspector (0.63.3)
-  - react-native-camera (3.40.0):
+  - react-native-camera (3.40.5):
     - React-Core
-    - react-native-camera/RCT (= 3.40.0)
-    - react-native-camera/RN (= 3.40.0)
-  - react-native-camera/RCT (3.40.0):
+    - react-native-camera/RCT (= 3.40.5)
+    - react-native-camera/RN (= 3.40.5)
+  - react-native-camera/RCT (3.40.5):
     - React-Core
-  - react-native-camera/RN (3.40.0):
+  - react-native-camera/RN (3.40.5):
     - React-Core
   - react-native-safe-area-context (3.1.9):
     - React-Core
@@ -333,8 +333,10 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.10):
     - React
-  - RNGestureHandler (1.8.0):
+  - RNFS (2.16.6):
     - React
+  - RNGestureHandler (1.9.0):
+    - React-Core
   - RNGoogleSignin (5.0.0):
     - GoogleSignIn (~> 5.0.0)
     - React-Core
@@ -342,7 +344,7 @@ PODS:
     - React-Core
   - RNReanimated (1.13.2):
     - React-Core
-  - RNScreens (2.15.0):
+  - RNScreens (2.16.1):
     - React-Core
   - RNVectorIcons (7.1.0):
     - React
@@ -404,6 +406,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-community/google-signin`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -496,6 +499,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
@@ -544,7 +549,7 @@ SPEC CHECKSUMS:
   React-jsi: df07aa95b39c5be3e41199921509bfa929ed2b9d
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
-  react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
+  react-native-camera: 0bd2e98d3095e181642d94cda38313cc1c5ecd97
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
@@ -559,11 +564,12 @@ SPEC CHECKSUMS:
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
-  RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
+  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
+  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
   RNGoogleSignin: ad866d4c4af2651e36801dd3b7771d7715353499
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
-  RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
+  RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

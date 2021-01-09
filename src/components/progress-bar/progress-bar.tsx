@@ -16,7 +16,7 @@ const ProgressBar: React.FC<Props> = ({ value }) => {
     () => ({
       translateX: new Value(-maxValue),
     }),
-    [],
+    [maxValue],
   );
 
   const { animation } = useMemo(() => {
@@ -27,13 +27,14 @@ const ProgressBar: React.FC<Props> = ({ value }) => {
       translateX,
       animation: timing(translateX, { toValue, duration: 700, useNativeDriver: true }),
     };
-  }, [value, maxValue]);
+  }, [value, maxValue, translateX]);
 
   useEffect(() => {
     if (maxValue !== 0) {
       animation.start();
     }
-  }, [value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, maxValue]);
 
   const onLayout = ({
     nativeEvent: {

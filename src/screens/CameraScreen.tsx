@@ -1,25 +1,30 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, AppState, AppStateStatus } from 'react-native';
+import { View, StyleSheet, AppState, AppStateStatus } from 'react-native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RNCamera, TakePictureResponse } from 'react-native-camera';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Mime from 'react-native-mime-types';
 
-import { GoogleService } from '../services';
+import { GoogleService, OnResumableUploadProgressCallback } from '../services';
 
 import { RootStackParamList } from '../router';
 import { useLoading } from '../ComponentLibrary/Loading';
 import { useModal } from '../ComponentLibrary/Modal';
 import { useFlashMessage } from '../ComponentLibrary/FlashMessage';
-import { colors, iconShadows, containerStyles } from '../styles';
+import { containerStyles } from '../styles';
 import {
   checkCameraPermission,
   checkAndRequestCameraPermission,
   PermissionResultType,
 } from '../lib/permissions';
 import { CameraPermissionsNotGranted } from '../Components/Permissions';
-import { DrawerBarsButton } from '../Components/Drawer';
-import { TopImageDisplay, ImageRatingModalParamsType, UploadButton } from '../Components/Camera';
+import { HamburgerButton } from '../Components/Drawer';
+import {
+  TopImageDisplay,
+  ImageRatingModalParamsType,
+  UploadButton,
+  ShootPictureButton,
+} from '../Components/Camera';
 import { config } from '../config';
 import { generateFileName } from '../lib/file';
 
@@ -85,7 +90,7 @@ const CameraScreen: React.FC<Props> = () => {
   }, []);
 
   const onDisplayImagePress = useCallback(() => {
-    const onImageUpload = async (base64Image: string, rating: number) => {
+    const onImageUpload = async (base64Image: string, rating: number, uri: string) => {
       try {
         setUploadingImage(true);
         const parentFolderRes = await GoogleService.getFolderByName(
@@ -96,11 +101,25 @@ const CameraScreen: React.FC<Props> = () => {
           parentFolderRes?.id,
         );
 
-        await GoogleService.uploadMultiPartFile(base64Image, {
-          parents: [folderRes?.id ?? ''],
-          name: generateFileName(),
-        });
+        const mimeType = Mime.lookup(uri);
+
+        const onUploadProgress: OnResumableUploadProgressCallback = (currentSize, maxSize) => {
+          console.log('currentSize', currentSize);
+          console.log('maxSize', maxSize);
+          console.log(`\n${(currentSize / maxSize) * 100}\n`);
+        };
+
+        await GoogleService.uploadResumableFile(
+          base64Image,
+          {
+            parents: [folderRes?.id ?? ''],
+            name: generateFileName(),
+            mimeType,
+          },
+          onUploadProgress,
+        );
       } catch (err) {
+        console.log('err', err);
         showError(err);
       } finally {
         setUploadingImage(false);
@@ -135,7 +154,7 @@ const CameraScreen: React.FC<Props> = () => {
         style={[containerStyles.fill, styles.container]}
         captureAudio={false}>
         <View style={[styles.topLeftContainer, { top: 20 + insets.top }]}>
-          <DrawerBarsButton />
+          <HamburgerButton />
           <View style={styles.uploadContainer}>
             <UploadButton uploading={uploadingImage} />
           </View>
@@ -149,17 +168,7 @@ const CameraScreen: React.FC<Props> = () => {
           />
         </View>
         <View style={[styles.bottomContainer, { bottom: 40 + insets?.bottom }]}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={onShootPicPress}
-            disabled={imageShootLoading}>
-            <Icon
-              name="camera"
-              size={60}
-              color={imageShootLoading ? colors.gray500 : colors.white}
-              style={iconShadows.black}
-            />
-          </TouchableOpacity>
+          <ShootPictureButton onPress={onShootPicPress} loading={imageShootLoading} />
         </View>
       </RNCamera>
     </SafeAreaView>

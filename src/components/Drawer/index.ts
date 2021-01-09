@@ -1,4 +1,4 @@
 import DrawerContent from './DrawerContent';
-import DrawerBarsButton from './BarsButton';
+import HamburgerButton from './HamburgerButton';
 
-export { DrawerContent, DrawerBarsButton };
+export { DrawerContent, HamburgerButton };

@@ -3,4 +3,6 @@ import AuthService from './AuthService';
 import ApiService from './ApiService';
 import GoogleService from './GoogleService';
 
+export * from './GoogleService';
+
 export { StorageService, AuthService, ApiService, GoogleService };

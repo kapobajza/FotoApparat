@@ -1,5 +1,5 @@
 export interface ImageRatingModalParamsType {
   uri: string | undefined;
-  onImageUpload(base64Uri: string, rating: number): Promise<void>;
+  onImageUpload(base64Image: string, rating: number, uri: string): Promise<void>;
   base64Image: string;
 }

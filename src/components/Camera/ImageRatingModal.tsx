@@ -29,10 +29,10 @@ const ImageRatingModal: React.FC<ModalComponentPropsType> = ({
         showError({ message: 'Please select a rating first.' });
       } else {
         closeModal();
-        await onImageUpload(base64Image ?? '', rating);
+        await onImageUpload(base64Image ?? '', rating, uri ?? '');
       }
     },
-    [closeModal, onImageUpload, showError, base64Image],
+    [closeModal, onImageUpload, showError, base64Image, uri],
   );
 
   return (

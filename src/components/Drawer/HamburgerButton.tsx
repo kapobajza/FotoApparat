@@ -5,7 +5,7 @@ import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 import { colors, iconShadows } from '../../styles';
 
-const BarsButton = () => {
+const HamburgerButton = () => {
   const navigation = useNavigation();
 
   const onBarsButtonPress = useCallback(() => {
@@ -19,4 +19,4 @@ const BarsButton = () => {
   );
 };
 
-export default BarsButton;
+export default HamburgerButton;

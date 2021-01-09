@@ -11,5 +11,5 @@ export default async function (response: AxiosResponse<any>) {
     console.log('response', response);
   }
 
-  return response?.data ?? response;
+  return response;
 }
