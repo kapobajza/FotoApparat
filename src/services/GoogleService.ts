@@ -7,7 +7,7 @@ import {
   createMultiPartBody,
   MULTIPART_BOUNDARY,
   MetadataType,
-  getFileByteArray,
+  // getFileByteArray,
 } from '../lib/file';
 import { ps, PubSubEventName } from '../lib/pubSub';
 
