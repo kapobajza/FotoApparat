@@ -5,7 +5,7 @@ import { RNCamera, TakePictureResponse } from 'react-native-camera';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import Mime from 'react-native-mime-types';
 
-import { GoogleService, OnResumableUploadProgressCallback } from '../services';
+import { GoogleService } from '../services';
 
 import { RootStackParamList } from '../router';
 import { useLoading } from '../ComponentLibrary/Loading';
@@ -103,21 +103,11 @@ const CameraScreen: React.FC<Props> = () => {
 
         const mimeType = Mime.lookup(uri);
 
-        const onUploadProgress: OnResumableUploadProgressCallback = (currentSize, maxSize) => {
-          console.log('currentSize', currentSize);
-          console.log('maxSize', maxSize);
-          console.log(`\n${(currentSize / maxSize) * 100}\n`);
-        };
-
-        await GoogleService.uploadResumableFile(
-          base64Image,
-          {
-            parents: [folderRes?.id ?? ''],
-            name: generateFileName(),
-            mimeType,
-          },
-          onUploadProgress,
-        );
+        await GoogleService.uploadResumableFile(uri, {
+          parents: [folderRes?.id ?? ''],
+          name: generateFileName(),
+          mimeType,
+        });
       } catch (err) {
         console.log('err', err);
         showError(err);

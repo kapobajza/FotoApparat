@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { StyleSheet, View, Animated, LayoutChangeEvent } from 'react-native';
 
 import { colors } from '../../styles';
@@ -24,7 +24,6 @@ const ProgressBar: React.FC<Props> = ({ value }) => {
     const toValue = (maxValue * val) / 100 - maxValue;
 
     return {
-      translateX,
       animation: timing(translateX, { toValue, duration: 700, useNativeDriver: true }),
     };
   }, [value, maxValue, translateX]);
@@ -33,14 +32,16 @@ const ProgressBar: React.FC<Props> = ({ value }) => {
     if (maxValue !== 0) {
       animation.start();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, maxValue]);
+  }, [value, maxValue, animation]);
 
-  const onLayout = ({
-    nativeEvent: {
-      layout: { width },
-    },
-  }: LayoutChangeEvent) => setMaxValue(width);
+  const onLayout = useCallback(
+    ({
+      nativeEvent: {
+        layout: { width },
+      },
+    }: LayoutChangeEvent) => setMaxValue(width),
+    [],
+  );
 
   return (
     <View style={styles.container}>

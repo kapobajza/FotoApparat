@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { NativeModules } from 'react-native';
 
 import { config } from '../config';
 import { requestInterceptor, responseInterceptor } from '../lib/interceptors';
@@ -8,6 +9,7 @@ import {
   MetadataType,
   getFileByteArray,
 } from '../lib/file';
+import { ps, PubSubEventName } from '../lib/pubSub';
 
 const GoogleDriveInstance = axios.create({
   baseURL: config.GOOGLE_DRIVE_API_URL,
@@ -43,9 +45,13 @@ export interface GoogleDriveRequestBodyType {
   parents?: string[];
 }
 
-export interface OnResumableUploadProgressCallback {
-  (currentSize: number, maxSize: number): void;
+export interface OnUploadProgressData {
+  current: number;
+  max: number;
+  fileName: string;
 }
+
+const { FileConverterModule } = NativeModules;
 
 class GoogleService {
   getFolderByName = async (name: string): Promise<GoogleDriveFileType | null> => {
@@ -109,11 +115,7 @@ class GoogleService {
     return data ?? null;
   };
 
-  uploadResumableFile = async (
-    base64Image: string,
-    metadata: MetadataType = {},
-    onProgress: OnResumableUploadProgressCallback,
-  ): Promise<void> => {
+  uploadResumableFile = async (uri: string, metadata: MetadataType = {}): Promise<void> => {
     const { headers } = await GoogleDriveUploadInstace.post(
       'files?uploadType=resumable',
       metadata,
@@ -125,11 +127,12 @@ class GoogleService {
       },
     );
 
-    const byteArray = getFileByteArray(base64Image);
+    const { byteArray } = await FileConverterModule.toByteArray(uri);
     const chunkSize = 256 * 1024 * 5;
     const fileSize = byteArray.length;
     const max = Math.ceil(fileSize / chunkSize);
     const isRoundedSize = fileSize % chunkSize === 0;
+    const fileName = metadata.name ?? '';
 
     for (let i = 0; i < max; i++) {
       const startingChunkIndex = i * chunkSize;
@@ -137,7 +140,11 @@ class GoogleService {
 
       const imageChunk = byteArray.slice(startingChunkIndex, endingChunkIndex);
 
-      onProgress(startingChunkIndex, fileSize);
+      ps.publish<OnUploadProgressData>(PubSubEventName.ON_UPLOAD_PROGRESS, {
+        current: startingChunkIndex,
+        max: fileSize,
+        fileName,
+      });
 
       await GoogleDriveUploadInstace.put<GoogleDriveFileType>(headers?.location, imageChunk, {
         headers: {
@@ -146,8 +153,16 @@ class GoogleService {
       });
     }
 
-    onProgress(fileSize, fileSize);
+    ps.publish<OnUploadProgressData>(PubSubEventName.ON_UPLOAD_PROGRESS, {
+      current: fileSize,
+      max: fileSize,
+      fileName,
+    });
   };
+
+  onUploadProgressSubscribe(callback: (data: OnUploadProgressData) => void) {
+    return ps.subscribe(PubSubEventName.ON_UPLOAD_PROGRESS, callback);
+  }
 }
 
 export default new GoogleService();

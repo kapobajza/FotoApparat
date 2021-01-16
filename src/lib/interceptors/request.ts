@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { StorageService } from '../../services';
+import StorageService from '../../services/StorageService';
 
 import { config, EnvironmentType } from '../../config';
 
