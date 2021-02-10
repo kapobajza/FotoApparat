@@ -64,12 +64,12 @@ const Modal: React.FC<Props> = ({ stack, setContextValue }) => {
           const StackComponent: ComponentType<ModalComponentPropsType> = stackProp;
           let paramsMap: { [key: string]: any } = {};
 
-          if (params) {
-            paramsMap = params as { [key: string]: any };
-          }
+          // if (params) {
+          //   paramsMap = params as { [key: string]: any };
+          // }
 
           const modalProps: ModalPropType = {
-            getParam: (n, fallback) => paramsMap[n] || fallback,
+            getParam: (n, fallback) => params[n] || fallback,
             closeModal,
           };
 
